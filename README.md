@@ -19,12 +19,16 @@ An AI-driven agent that integrates with Playwright to automate test generation a
 
 **Stack:** Python · Playwright · OpenAI/LLM integration · pytest
 
+> TypeScript is also supported — swap `requirements.txt` for `package.json` + `tsconfig.json` and use `@playwright/test` with the `openai` npm package. The agent structure is identical.
+
 ```
 agents/
-└── playwright-test-agent/
-    ├── agent.py          # Core agent logic
-    ├── test_runner.py    # Execution layer
-    ├── reporter.py       # Structured output
+└── playwright_test_agent/
+    ├── agent.py               # Core agent logic + CLI entry point
+    ├── test_runner.py         # Execution layer (pytest subprocess)
+    ├── reporter.py            # Structured output (JSON + Markdown)
+    ├── prompts/
+    │   └── generate_tests.txt # LLM prompt template
     └── README.md
 ```
 
@@ -43,12 +47,54 @@ An automation agent that ingests Azure DevOps sprint and backlog data to generat
 
 ```
 agents/
-└── azure-devops-metrics-agent/
-    ├── agent.py          # Core agent logic
-    ├── ado_client.py     # Azure DevOps API wrapper
-    ├── metrics.py        # KPI computation
-    ├── reporter.py       # Report generation
+└── azure_devops_metrics_agent/
+    ├── agent.py          # Core agent logic + CLI entry point
+    ├── ado_client.py     # Azure DevOps REST API v7.0 wrapper
+    ├── metrics.py        # KPI computation (defect rate, pass rate, bug aging)
+    ├── reporter.py       # Report generation (Jinja2 → Markdown + JSON)
     └── README.md
+```
+
+---
+
+## Getting started
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+playwright install
+
+# 2. Configure environment
+cp .env.example .env
+# Fill in OPENAI_API_KEY, ADO_ORGANIZATION, ADO_PROJECT, ADO_PAT
+
+# 3. Run the Playwright Test Agent
+python -m agents.playwright_test_agent.agent --url https://viacep.com.br/ws/13140770/json/
+
+# 4. Run the Azure DevOps Metrics Agent
+python -m agents.azure_devops_metrics_agent.agent --sprint "Sprint 42"
+
+# 5. Run the test suite
+pytest tests/
+```
+
+Reports are written to `agents/<agent>/reports/` after each run.
+
+---
+
+## Project structure
+
+```
+qa-ai-agent-toolkit/
+├── agents/
+│   ├── playwright_test_agent/
+│   └── azure_devops_metrics_agent/
+├── shared/
+│   ├── logger.py     # Structured JSON-line logging
+│   └── config.py     # .env loader with validation
+└── tests/
+    ├── test_playwright_agent.py
+    └── test_ado_agent.py
 ```
 
 ---

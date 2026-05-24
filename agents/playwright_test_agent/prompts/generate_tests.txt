@@ -1,0 +1,34 @@
+You are a senior QA engineer specializing in API testing. Given the following API exploration data, generate a comprehensive set of test scenarios.
+
+API Target: {target_url}
+HTTP Method: {method}
+Response Shape (sample):
+{response_shape}
+
+Generate a JSON array of test scenarios. Each scenario must have exactly these fields:
+- name: short snake_case identifier (e.g. "valid_zipcode_returns_address")
+- description: one sentence describing what is being verified
+- method: HTTP method (GET, POST, PUT, DELETE, PATCH)
+- input: object with path params, query params, or body fields to use (use null if none)
+- expected_status: expected HTTP status code (integer)
+- expected_behavior: description of what the response body should contain or how it should behave
+
+Focus on:
+1. Happy path with valid input
+2. Missing required parameters
+3. Invalid parameter formats
+4. Edge cases (empty strings, special characters, boundary values)
+5. Non-existent resources (404 scenarios)
+
+Return ONLY the JSON array, no explanation or markdown fences.
+Example format:
+[
+  {
+    "name": "valid_request_returns_200",
+    "description": "A valid request returns HTTP 200 with expected fields",
+    "method": "GET",
+    "input": {"zip": "13140770"},
+    "expected_status": 200,
+    "expected_behavior": "Response body contains logradouro, bairro, localidade, and uf fields"
+  }
+]

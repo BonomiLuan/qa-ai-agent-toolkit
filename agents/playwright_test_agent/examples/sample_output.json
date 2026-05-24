@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-05-24T14:00:00+00:00",
+  "target": "https://viacep.com.br/ws/13140770/json/",
+  "summary": {
+    "total": 5,
+    "passed": 4,
+    "failed": 1,
+    "pass_rate": 80.0
+  },
+  "scenarios": [
+    {
+      "name": "valid_zipcode_returns_200",
+      "description": "A valid 8-digit zip code returns HTTP 200 with address fields",
+      "method": "GET",
+      "input": {"zip": "13140770"},
+      "expected_status": 200,
+      "expected_behavior": "Response contains logradouro, bairro, localidade, uf",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "invalid_zipcode_returns_error",
+      "description": "An invalid zip code format returns HTTP 400 or error body",
+      "method": "GET",
+      "input": {"zip": "00000000"},
+      "expected_status": 200,
+      "expected_behavior": "Response body contains erro: true",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "non_numeric_zipcode_returns_400",
+      "description": "Non-numeric zip code input returns HTTP 400",
+      "method": "GET",
+      "input": {"zip": "ABCDEFGH"},
+      "expected_status": 400,
+      "expected_behavior": "API rejects non-numeric input with status 400",
+      "status": "FAIL",
+      "error": "AssertionError: Expected 400, got 200"
+    },
+    {
+      "name": "short_zipcode_returns_400",
+      "description": "A zip code with fewer than 8 digits returns 400",
+      "method": "GET",
+      "input": {"zip": "1234"},
+      "expected_status": 400,
+      "expected_behavior": "API rejects short input",
+      "status": "PASS",
+      "error": null
+    },
+    {
+      "name": "response_has_required_fields",
+      "description": "Valid response includes all required address fields",
+      "method": "GET",
+      "input": {"zip": "01310100"},
+      "expected_status": 200,
+      "expected_behavior": "Fields cep, logradouro, complemento, bairro, localidade, uf, ibge are present",
+      "status": "PASS",
+      "error": null
+    }
+  ]
+}
