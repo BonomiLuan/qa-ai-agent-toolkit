@@ -1,82 +1,113 @@
 # qa-ai-agent-toolkit
 
-**AI-augmented quality engineering agents for regulated environments.**
+**AI-augmented quality engineering for regulated systems.**
 
-This toolkit contains two AI agents designed to reduce the manual overhead of quality engineering in high-stakes software domains — financial services and healthcare. Both agents are active implementations built from real-world QA practice, not prototypes.
-
----
-
-## Agents
-
-### 🤖 Agent 1: Playwright Test Automation Agent
-
-An AI-driven agent that integrates with Playwright to automate test generation and execution for web and API layers. Designed for environments where test suites need to evolve continuously alongside fast-moving software systems.
-
-**What it does:**
-- Analyzes application endpoints and UI flows to suggest and scaffold test scenarios
-- Executes tests and reports results in structured format
-- Reduces manual effort in maintaining coverage for evolving systems
-
-**Stack:** Python · Playwright · OpenAI/LLM integration · pytest
-
-```
-agents/
-└── playwright-test-agent/
-    ├── agent.py          # Core agent logic
-    ├── test_runner.py    # Execution layer
-    ├── reporter.py       # Structured output
-    └── README.md
-```
+> **Status: design stage.** This repository currently contains architecture and design
+> documentation. Implementation is published incrementally — see the [Roadmap](#roadmap)
+> for what exists and what is coming.
 
 ---
 
-### 📊 Agent 2: Azure DevOps Metrics Agent
+## The problem
 
-An automation agent that ingests Azure DevOps sprint and backlog data to generate quality intelligence reports for engineering teams — defect rates, test coverage trends, incident frequency, and team-level quality compliance.
+In regulated domains — payments, healthcare billing, financial services — the cost of
+adequate test coverage is high enough that it routinely loses to schedule pressure. The
+consequences are documented at national scale: CMS reported approximately **$94 billion in
+improper payments** across federal healthcare programs in FY2025, and **77% of Medicaid
+improper payments** trace to insufficient documentation — failures of process and system
+correctness rather than clinical judgment.
 
-**What it does:**
-- Pulls work item and test run data from Azure DevOps API
-- Computes quality KPIs per team and sprint
-- Generates structured reports for engineering managers and QA leads
+Testing these systems properly is expensive. That expense is why it often doesn't happen.
+This project exists to lower that cost.
 
-**Stack:** Python · Azure DevOps REST API · pandas · Jinja2 (report templates)
+---
 
-```
-agents/
-└── azure-devops-metrics-agent/
-    ├── agent.py          # Core agent logic
-    ├── ado_client.py     # Azure DevOps API wrapper
-    ├── metrics.py        # KPI computation
-    ├── reporter.py       # Report generation
-    └── README.md
-```
+## Scope
+
+Two agents, aimed at the two places where quality work in regulated systems consumes the
+most human effort: producing and maintaining test coverage, and turning engineering activity
+into decision-grade quality signal.
+
+### Agent 1 — Test generation and execution
+
+An agent that works alongside Playwright to scaffold, execute and maintain test coverage for
+web and API layers in systems that change continuously.
+
+**Intended capability**
+- Analyze application endpoints and UI flows and propose test scenarios
+- Scaffold executable tests from those proposals
+- Execute and report results in a structured, machine-readable format
+- Flag coverage drift as the system under test evolves
+
+**Planned stack:** Python · Playwright · pytest · LLM integration
+
+### Agent 2 — Quality metrics
+
+An agent that ingests work-item and test-execution data and produces quality intelligence
+for engineering teams: defect density, coverage trends, escaped-defect rates and
+team-level quality signal.
+
+**Intended capability**
+- Pull work item and test run data from Azure DevOps
+- Compute quality KPIs per team and per iteration
+- Generate structured reports for engineering leads
+
+**Planned stack:** Python · Azure DevOps REST API · pandas
 
 ---
 
 ## Design principles
 
-This toolkit was designed with regulated environments in mind:
+These constraints come from building quality practice inside regulated environments, where
+"the tool decided" is not an acceptable answer to an auditor.
 
-- **Traceability first**: every test generated or executed is logged with full context
-- **No magic black boxes**: agents explain what they're doing and why
-- **Domain-agnostic core, domain-specific adapters**: the agent logic is reusable; the configuration adapts to the target system
-- **Observable by default**: outputs are structured and integrable with existing dashboards
+- **Traceability first.** Every generated or executed test is logged with full context —
+  what was tested, why it was proposed, what the result was.
+- **No black boxes.** The agent states what it is doing and on what basis. A suggestion you
+  cannot interrogate is a suggestion you cannot defend.
+- **Domain-agnostic core, domain-specific adapters.** Agent logic stays reusable;
+  configuration carries the domain.
+- **Observable by default.** Output is structured and integrable with existing dashboards,
+  not trapped in the tool.
+- **Human decides.** These agents reduce the cost of coverage. They do not decide what
+  adequate coverage is.
 
 ---
 
-## Applied examples
+## Roadmap
 
-See [`ai-qa-lab`](https://github.com/BonomiLuan/ai-qa-lab) for demonstrations of these agents applied to real-world public APIs.
+| Milestone | Target | Status |
+|---|---|---|
+| Architecture and design documentation | Aug 2026 | 🟡 In progress |
+| Agent 1 — core generation loop | Oct 2026 | ⬜ Planned |
+| Agent 1 — first usable release | Dec 2026 | ⬜ Planned |
+| Applied examples against public APIs | Dec 2026 | ⬜ Planned |
+| Agent 2 — metrics ingestion and reporting | Feb 2027 | ⬜ Planned |
+
+Progress is published as it lands. Nothing is described here as working before it works.
 
 ---
 
-## Status
+## Provenance and scope
 
-🚧 Active development — agents are in production use at a healthcare institution in Brazil. Open-source release in progress.
+This repository is written independently. It contains **no client code, data, configuration,
+or proprietary material of any employer or client**.
+
+The design draws on the author's professional practice in quality engineering for financial
+services and healthcare systems, but everything published here is original and written for
+public use. That separation is deliberate and non-negotiable.
+
+---
+
+## Contributing
+
+Early stage — issues and design discussion welcome. If you work on quality engineering in
+regulated systems and something here is wrong or naive, say so.
 
 ---
 
 ## Author
 
-**Luan Bonomi** · Senior Quality Engineer  
-[linkedin.com/in/luanbonomi](https://www.linkedin.com/in/luanbonomi) · [github.com/BonomiLuan](https://github.com/BonomiLuan)
+**Luan Bonomi** · Software Quality Engineer
+[linkedin.com/in/luanbonomi](https://www.linkedin.com/in/luanbonomi) ·
+[github.com/BonomiLuan](https://github.com/BonomiLuan)
